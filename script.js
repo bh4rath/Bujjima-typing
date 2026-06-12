@@ -66,18 +66,18 @@ const SURPRISE_POOL = [
   ["🐠", "Fish"],
 ];
 
-// Bright, cheerful background gradients.
+// Bright, cheerful background gradients, each paired with a matching accent color.
 const BACKGROUNDS = [
-  "linear-gradient(135deg, #ffd1dc, #c1f0ff)",
-  "linear-gradient(135deg, #fff6b7, #f6416c)",
-  "linear-gradient(135deg, #a8edea, #fed6e3)",
-  "linear-gradient(135deg, #d4fc79, #96e6a1)",
-  "linear-gradient(135deg, #fbc2eb, #a6c1ee)",
-  "linear-gradient(135deg, #fddb92, #d1fdff)",
-  "linear-gradient(135deg, #ff9a9e, #fad0c4)",
-  "linear-gradient(135deg, #84fab0, #8fd3f4)",
-  "linear-gradient(135deg, #cfd9df, #e2ebf0)",
-  "linear-gradient(135deg, #f6d365, #fda085)",
+  { bg: "linear-gradient(135deg, #ffd1dc, #c1f0ff)", accent: "#ff6f91" },
+  { bg: "linear-gradient(135deg, #fff6b7, #f6416c)", accent: "#f6416c" },
+  { bg: "linear-gradient(135deg, #a8edea, #fed6e3)", accent: "#00b8a9" },
+  { bg: "linear-gradient(135deg, #d4fc79, #96e6a1)", accent: "#2bb673" },
+  { bg: "linear-gradient(135deg, #fbc2eb, #a6c1ee)", accent: "#8e44ad" },
+  { bg: "linear-gradient(135deg, #fddb92, #d1fdff)", accent: "#f7b733" },
+  { bg: "linear-gradient(135deg, #ff9a9e, #fad0c4)", accent: "#ff6f61" },
+  { bg: "linear-gradient(135deg, #84fab0, #8fd3f4)", accent: "#1ca9c9" },
+  { bg: "linear-gradient(135deg, #ffe0f7, #d9b8ff)", accent: "#b15cff" },
+  { bg: "linear-gradient(135deg, #f6d365, #fda085)", accent: "#f4623a" },
 ];
 
 const CONFETTI_POOL = ["🎉", "🌟", "✨", "🎈", "🍀", "🦋", "🌈", "💖"];
@@ -213,7 +213,9 @@ function playAnimalSound(emoji) {
 }
 
 function randomBackground() {
-  document.body.style.background = BACKGROUNDS[Math.floor(Math.random() * BACKGROUNDS.length)];
+  const { bg, accent } = BACKGROUNDS[Math.floor(Math.random() * BACKGROUNDS.length)];
+  document.body.style.background = bg;
+  document.body.style.setProperty("--accent", accent);
 }
 
 function spawnConfetti() {

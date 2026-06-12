@@ -4,7 +4,7 @@ html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  font-family: "Comic Sans MS", "Trebuchet MS", Verdana, sans-serif;
+  font-family: "Fredoka", "Comic Sans MS", "Trebuchet MS", Verdana, sans-serif;
   -webkit-user-select: none;
   user-select: none;
   touch-action: manipulation;
@@ -17,6 +17,31 @@ body {
   justify-content: center;
   background: linear-gradient(135deg, #ffd1dc, #c1f0ff);
   transition: background 0.4s ease;
+  --accent: #ff6f91;
+}
+
+#title-badge {
+  position: fixed;
+  top: 2vmin;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  font-family: "Baloo 2", "Fredoka", sans-serif;
+  font-weight: 800;
+  font-size: 3vmin;
+  color: #5a4a8a;
+  background: rgba(255, 255, 255, 0.75);
+  border: 0.4vmin solid var(--accent);
+  border-radius: 100px;
+  padding: 0.6vmin 3vmin;
+  box-shadow: 0 0.6vmin 1.2vmin rgba(0, 0, 0, 0.15);
+  transition: border-color 0.4s ease;
+  animation: wiggle 3s ease-in-out infinite;
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: translateX(-50%) rotate(-2deg); }
+  50% { transform: translateX(-50%) rotate(2deg); }
 }
 
 #display {
@@ -28,6 +53,19 @@ body {
   z-index: 1;
 }
 
+#card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.55);
+  border: 0.6vmin solid rgba(255, 255, 255, 0.9);
+  border-radius: 6vmin;
+  padding: 4vmin 8vmin;
+  box-shadow: 0 1.5vmin 3vmin rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(4px);
+}
+
 #emoji {
   font-size: 40vmin;
   line-height: 1;
@@ -36,11 +74,16 @@ body {
 
 #word {
   margin-top: 1rem;
+  font-family: "Baloo 2", "Fredoka", sans-serif;
   font-size: 8vmin;
-  font-weight: bold;
-  color: #4a4a4a;
-  text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.6);
+  font-weight: 800;
+  color: #fff;
+  background: var(--accent);
+  border-radius: 100px;
+  padding: 0.5vmin 4vmin;
+  text-shadow: 0.15vmin 0.15vmin 0 rgba(0, 0, 0, 0.12);
   letter-spacing: 0.1em;
+  transition: background-color 0.4s ease;
 }
 
 #emoji.pop,
@@ -73,7 +116,7 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.6);
   z-index: 10;
   transition: opacity 0.6s ease, visibility 0.6s ease;
 }
@@ -82,6 +125,14 @@ body {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+}
+
+#welcome-card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 0.8vmin dashed #ff6f91;
+  border-radius: 6vmin;
+  padding: 4vmin 8vmin;
+  box-shadow: 0 1.5vmin 3vmin rgba(0, 0, 0, 0.15);
 }
 
 #welcome-emoji {
@@ -95,6 +146,7 @@ body {
 }
 
 #welcome h1 {
+  font-family: "Baloo 2", "Fredoka", sans-serif;
   font-size: 7vmin;
   color: #ff6f91;
   margin: 0.5em 0;
@@ -103,6 +155,44 @@ body {
 #welcome p {
   font-size: 4vmin;
   color: #555;
+}
+
+#welcome-friends {
+  margin-top: 2vmin;
+  font-size: 8vmin;
+  animation: bounce-row 1.6s ease-in-out infinite;
+}
+
+@keyframes bounce-row {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-1.5vmin); }
+}
+
+#decor-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.decor {
+  position: absolute;
+  font-size: 8vmin;
+  opacity: 0.5;
+  animation: float-decor ease-in-out infinite;
+}
+
+.decor-1 { top: 8vh; left: 6vw; animation-duration: 7s; }
+.decor-2 { top: 14vh; left: 88vw; font-size: 6vmin; animation-duration: 5s; animation-delay: 0.5s; }
+.decor-3 { top: 78vh; left: 4vw; font-size: 10vmin; animation-duration: 8s; animation-delay: 1s; }
+.decor-4 { top: 70vh; left: 90vw; font-size: 6vmin; animation-duration: 6s; animation-delay: 0.3s; }
+.decor-5 { top: 40vh; left: 92vw; font-size: 6vmin; animation-duration: 5.5s; animation-delay: 0.8s; }
+.decor-6 { top: 45vh; left: 4vw; font-size: 5vmin; animation-duration: 6.5s; animation-delay: 1.2s; }
+
+@keyframes float-decor {
+  0%, 100% { transform: translateY(0) rotate(-5deg); }
+  50% { transform: translateY(-3vmin) rotate(5deg); }
 }
 
 #confetti-layer {
