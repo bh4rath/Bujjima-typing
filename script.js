@@ -89,6 +89,36 @@ const AMBIENT_CRITTERS = [
   "🐬", "🐠", "🦜", "🐝",
 ];
 
+// What each animal says when it shows up, spoken aloud for extra fun.
+const ANIMAL_SOUNDS = {
+  "🦁": "Roaaar!",
+  "🐯": "Grrrowl, roar!",
+  "🐶": "Woof woof!",
+  "🐱": "Meow!",
+  "🐘": "Pawoo!",
+  "🐝": "Buzz buzz!",
+  "🦊": "Ring-ding-ding!",
+  "🦔": "Squeak!",
+  "🐆": "Growl!",
+  "🦘": "Boing boing!",
+  "🐵": "Ooh ooh ah ah!",
+  "🐒": "Ooh ooh ah ah!",
+  "🦉": "Hoot hoot!",
+  "🐼": "Munch munch!",
+  "🐰": "Hop hop!",
+  "🐍": "Hiss!",
+  "🦄": "Neigh!",
+  "🐺": "Awooo!",
+  "🐥": "Tweet tweet!",
+  "🦓": "Neigh!",
+  "🐻": "Grrrowl!",
+  "🐧": "Honk honk!",
+  "🐔": "Cluck cluck!",
+  "🦆": "Quack quack!",
+  "🐬": "Eee eee!",
+  "🦜": "Tweet tweet, hello!",
+};
+
 const welcome = document.getElementById("welcome");
 const emojiEl = document.getElementById("emoji");
 const wordEl = document.getElementById("word");
@@ -125,6 +155,21 @@ function playPopSound() {
 
   oscillator.start();
   oscillator.stop(ctx.currentTime + 0.2);
+}
+
+function speakAnimalSound(emoji) {
+  const sound = ANIMAL_SOUNDS[emoji];
+  if (!sound || !("speechSynthesis" in window)) {
+    return;
+  }
+
+  const utterance = new SpeechSynthesisUtterance(sound);
+  utterance.rate = 0.9;
+  utterance.pitch = 1.3;
+
+  // Stop any sound still playing so rapid keypresses don't queue up.
+  speechSynthesis.cancel();
+  speechSynthesis.speak(utterance);
 }
 
 function randomBackground() {
@@ -200,6 +245,7 @@ function handleInteraction(emoji, word) {
   spawnConfetti();
   spawnCritter(emoji);
   playPopSound();
+  speakAnimalSound(emoji);
 }
 
 document.addEventListener("keydown", (event) => {
