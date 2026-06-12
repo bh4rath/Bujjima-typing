@@ -86,8 +86,28 @@ const CONFETTI_POOL = ["🎉", "🌟", "✨", "🎈", "🍀", "🦋", "🌈", "�
 const AMBIENT_CRITTERS = [
   "🐶", "🐱", "🐰", "🦁", "🐯", "🐻", "🐼", "🐘", "🦒", "🦓",
   "🐺", "🦊", "🐵", "🦘", "🐧", "🐥", "🦋", "🐢", "🐔", "🦆",
-  "🐬", "🐠", "🦜", "🐝",
+  "🐬", "🐠", "🦜", "🐝", "🐄", "🐷", "🐑", "🐴",
 ];
+
+// Real recorded animal sounds (see sounds/CREDITS.md for licenses).
+const SOUND_FILES = {
+  "🦁": "sounds/lion-roar.mp3",
+  "🐯": "sounds/lion-roar.mp3",
+  "🐆": "sounds/lion-roar.mp3",
+  "🐶": "sounds/dog-bark.mp3",
+  "🐱": "sounds/cat-meow.mp3",
+  "🐘": "sounds/elephant-trumpet.mp3",
+  "🦉": "sounds/bird-chirp.mp3",
+  "🦜": "sounds/bird-chirp.mp3",
+  "🐥": "sounds/bird-chirp.mp3",
+  "🐔": "sounds/chicken-cluck.mp3",
+  "🦓": "sounds/horse-trot.mp3",
+  "🦄": "sounds/horse-trot.mp3",
+  "🐴": "sounds/horse-trot.mp3",
+  "🐄": "sounds/cow-moo.mp3",
+  "🐷": "sounds/pig-oink.mp3",
+  "🐑": "sounds/sheep-baa.mp3",
+};
 
 // What each animal says when it shows up, spoken aloud for extra fun.
 const ANIMAL_SOUNDS = {
@@ -117,6 +137,9 @@ const ANIMAL_SOUNDS = {
   "🦆": "Quack quack!",
   "🐬": "Eee eee!",
   "🦜": "Tweet tweet, hello!",
+  "🐄": "Moo!",
+  "🐷": "Oink oink!",
+  "🐑": "Baa baa!",
 };
 
 const welcome = document.getElementById("welcome");
@@ -157,6 +180,8 @@ function playPopSound() {
   oscillator.stop(ctx.currentTime + 0.2);
 }
 
+let currentAnimalAudio = null;
+
 function speakAnimalSound(emoji) {
   const sound = ANIMAL_SOUNDS[emoji];
   if (!sound || !("speechSynthesis" in window)) {
@@ -170,6 +195,21 @@ function speakAnimalSound(emoji) {
   // Stop any sound still playing so rapid keypresses don't queue up.
   speechSynthesis.cancel();
   speechSynthesis.speak(utterance);
+}
+
+function playAnimalSound(emoji) {
+  const file = SOUND_FILES[emoji];
+  if (!file) {
+    speakAnimalSound(emoji);
+    return;
+  }
+
+  // Stop any sound still playing so rapid keypresses don't overlap badly.
+  if (currentAnimalAudio) {
+    currentAnimalAudio.pause();
+  }
+  currentAnimalAudio = new Audio(file);
+  currentAnimalAudio.play().catch(() => {});
 }
 
 function randomBackground() {
@@ -245,7 +285,7 @@ function handleInteraction(emoji, word) {
   spawnConfetti();
   spawnCritter(emoji);
   playPopSound();
-  speakAnimalSound(emoji);
+  playAnimalSound(emoji);
 }
 
 document.addEventListener("keydown", (event) => {
