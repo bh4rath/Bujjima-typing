@@ -1,0 +1,132 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: "Comic Sans MS", "Trebuchet MS", Verdana, sans-serif;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ffd1dc, #c1f0ff);
+  transition: background 0.4s ease;
+}
+
+#display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 1;
+}
+
+#emoji {
+  font-size: 40vmin;
+  line-height: 1;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.2));
+}
+
+#word {
+  margin-top: 1rem;
+  font-size: 8vmin;
+  font-weight: bold;
+  color: #4a4a4a;
+  text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.1em;
+}
+
+#emoji.pop,
+#word.pop {
+  animation: pop 0.5s ease;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.3) rotate(-15deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.25) rotate(8deg);
+    opacity: 1;
+  }
+  75% {
+    transform: scale(0.95) rotate(-4deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+#welcome {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.85);
+  z-index: 10;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+#welcome.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+#welcome-emoji {
+  font-size: 25vmin;
+  animation: spin 4s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+#welcome h1 {
+  font-size: 7vmin;
+  color: #ff6f91;
+  margin: 0.5em 0;
+}
+
+#welcome p {
+  font-size: 4vmin;
+  color: #555;
+}
+
+#confetti-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 5;
+}
+
+.confetti {
+  position: absolute;
+  top: -10vmin;
+  font-size: 6vmin;
+  animation: confetti-fall linear forwards;
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) rotate(360deg);
+    opacity: 0;
+  }
+}
