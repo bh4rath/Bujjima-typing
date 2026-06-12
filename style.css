@@ -130,3 +130,43 @@ body {
     opacity: 0;
   }
 }
+
+#critter-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 4;
+}
+
+.critter {
+  position: absolute;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+.critter-body {
+  display: inline-block;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+@keyframes walk-ltr {
+  from { left: -15vmin; }
+  to { left: 115vmin; }
+}
+
+@keyframes walk-rtl {
+  from { left: 115vmin; }
+  to { left: -15vmin; }
+}
+
+@keyframes waddle {
+  0%, 100% { transform: scaleX(-1) translateY(0) rotate(-8deg); }
+  50% { transform: scaleX(-1) translateY(-1.5vmin) rotate(8deg); }
+}
+
+@keyframes waddle-flip {
+  0%, 100% { transform: scaleX(1) translateY(0) rotate(8deg); }
+  50% { transform: scaleX(1) translateY(-1.5vmin) rotate(-8deg); }
+}

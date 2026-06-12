@@ -82,10 +82,18 @@ const BACKGROUNDS = [
 
 const CONFETTI_POOL = ["🎉", "🌟", "✨", "🎈", "🍀", "🦋", "🌈", "💖"];
 
+// Critters that wander across the screen on their own, walking, running and flying.
+const AMBIENT_CRITTERS = [
+  "🐶", "🐱", "🐰", "🦁", "🐯", "🐻", "🐼", "🐘", "🦒", "🦓",
+  "🐺", "🦊", "🐵", "🦘", "🐧", "🐥", "🦋", "🐢", "🐔", "🦆",
+  "🐬", "🐠", "🦜", "🐝",
+];
+
 const welcome = document.getElementById("welcome");
 const emojiEl = document.getElementById("emoji");
 const wordEl = document.getElementById("word");
 const confettiLayer = document.getElementById("confetti-layer");
+const critterLayer = document.getElementById("critter-layer");
 
 let audioCtx = null;
 
@@ -136,6 +144,41 @@ function spawnConfetti() {
   }
 }
 
+function spawnCritter(emoji) {
+  const goingRight = Math.random() < 0.5;
+  const isRunning = Math.random() < 0.4;
+  const duration = isRunning ? 1.5 + Math.random() * 1.5 : 3.5 + Math.random() * 3;
+  const size = 8 + Math.random() * 6; // vmin
+
+  const critter = document.createElement("div");
+  critter.className = "critter";
+  critter.style.top = `${5 + Math.random() * 80}vh`;
+  critter.style.fontSize = `${size}vmin`;
+  critter.style.animationName = goingRight ? "walk-ltr" : "walk-rtl";
+  critter.style.animationDuration = `${duration}s`;
+
+  const body = document.createElement("span");
+  body.className = "critter-body";
+  body.textContent = emoji;
+  body.style.animationName = goingRight ? "waddle" : "waddle-flip";
+  body.style.animationDuration = `${isRunning ? 0.2 : 0.45}s`;
+
+  critter.appendChild(body);
+  critterLayer.appendChild(critter);
+  critter.addEventListener("animationend", (event) => {
+    if (event.animationName === "walk-ltr" || event.animationName === "walk-rtl") {
+      critter.remove();
+    }
+  });
+}
+
+function spawnAmbientCritter() {
+  const emoji = AMBIENT_CRITTERS[Math.floor(Math.random() * AMBIENT_CRITTERS.length)];
+  spawnCritter(emoji);
+  const nextDelay = 2500 + Math.random() * 4000;
+  setTimeout(spawnAmbientCritter, nextDelay);
+}
+
 function showItem(emoji, word) {
   emojiEl.textContent = emoji;
   wordEl.textContent = word;
@@ -155,6 +198,7 @@ function handleInteraction(emoji, word) {
   showItem(emoji, word);
   randomBackground();
   spawnConfetti();
+  spawnCritter(emoji);
   playPopSound();
 }
 
@@ -176,3 +220,6 @@ document.addEventListener("pointerdown", () => {
   const entry = SURPRISE_POOL[Math.floor(Math.random() * SURPRISE_POOL.length)];
   handleInteraction(entry[0], entry[1]);
 });
+
+// Keep the screen lively with animals wandering by on their own.
+spawnAmbientCritter();
