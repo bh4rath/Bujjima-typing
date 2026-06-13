@@ -1,69 +1,80 @@
-// Map every key to a fun emoji + word for Bujjima's Typing Fun!
-const KEY_MAP = {
-  a: ["🍎", "Apple"],
-  b: ["🐝", "Bee"],
-  c: ["🐱", "Cat"],
-  d: ["🐶", "Dog"],
-  e: ["🐘", "Elephant"],
-  f: ["🦊", "Fox"],
-  g: ["🦒", "Giraffe"],
-  h: ["🦔", "Hedgehog"],
-  i: ["🦎", "Iguana"],
-  j: ["🐆", "Jaguar"],
-  k: ["🦘", "Kangaroo"],
-  l: ["🦁", "Lion"],
-  m: ["🐒", "Monkey"],
-  n: ["🥜", "Nut"],
-  o: ["🦉", "Owl"],
-  p: ["🐼", "Panda"],
-  q: ["👑", "Queen"],
-  r: ["🐰", "Rabbit"],
-  s: ["🐍", "Snake"],
-  t: ["🐯", "Tiger"],
-  u: ["🦄", "Unicorn"],
-  v: ["🌋", "Volcano"],
-  w: ["🐺", "Wolf"],
-  x: ["🩻", "X-ray"],
-  y: ["🐥", "Yellow Chick"],
-  z: ["🦓", "Zebra"],
-
-  "0": ["0️⃣", "Zero"],
-  "1": ["1️⃣", "One"],
-  "2": ["2️⃣", "Two"],
-  "3": ["3️⃣", "Three"],
-  "4": ["4️⃣", "Four"],
-  "5": ["5️⃣", "Five"],
-  "6": ["6️⃣", "Six"],
-  "7": ["7️⃣", "Seven"],
-  "8": ["8️⃣", "Eight"],
-  "9": ["9️⃣", "Nine"],
-
-  " ": ["🌈", "Rainbow!"],
-  enter: ["🎉", "Party!"],
-  arrowup: ["⬆️", "Up!"],
-  arrowdown: ["⬇️", "Down!"],
-  arrowleft: ["⬅️", "Left!"],
-  arrowright: ["➡️", "Right!"],
-  backspace: ["🐬", "Dolphin"],
-  tab: ["🦜", "Parrot"],
-  shift: ["🎈", "Balloon"],
-  control: ["🍀", "Clover"],
-  alt: ["🌸", "Blossom"],
-  capslock: ["🦋", "Butterfly"],
-};
-
-// Fallback pool for any key not explicitly mapped above.
-const SURPRISE_POOL = [
-  ["🎈", "Balloon"],
-  ["🌟", "Star"],
-  ["🎊", "Confetti"],
+// A huge pool of animals, birds and fish — every keypress picks a random one
+// for maximum variety and surprise!
+const CREATURES = [
+  ["🦁", "Lion"],
+  ["🐯", "Tiger"],
+  ["🐶", "Dog"],
+  ["🐱", "Cat"],
+  ["🐭", "Mouse"],
+  ["🐹", "Hamster"],
+  ["🐰", "Rabbit"],
+  ["🦊", "Fox"],
+  ["🐻", "Bear"],
+  ["🐼", "Panda"],
+  ["🐨", "Koala"],
+  ["🐮", "Cow"],
+  ["🐷", "Pig"],
+  ["🐸", "Frog"],
+  ["🐵", "Monkey"],
+  ["🦍", "Gorilla"],
+  ["🐔", "Chicken"],
+  ["🐓", "Rooster"],
+  ["🐧", "Penguin"],
+  ["🐦", "Bird"],
+  ["🐤", "Chick"],
+  ["🦆", "Duck"],
+  ["🦅", "Eagle"],
+  ["🦉", "Owl"],
+  ["🦇", "Bat"],
+  ["🐺", "Wolf"],
+  ["🐴", "Horse"],
+  ["🦄", "Unicorn"],
+  ["🐝", "Bee"],
   ["🦋", "Butterfly"],
-  ["🌸", "Blossom"],
+  ["🐌", "Snail"],
+  ["🐞", "Ladybug"],
+  ["🐜", "Ant"],
+  ["🦗", "Cricket"],
+  ["🐢", "Turtle"],
+  ["🐍", "Snake"],
+  ["🦎", "Lizard"],
+  ["🦖", "Dinosaur"],
+  ["🦕", "Dinosaur"],
+  ["🐙", "Octopus"],
+  ["🦑", "Squid"],
+  ["🦐", "Shrimp"],
+  ["🦞", "Lobster"],
+  ["🦀", "Crab"],
+  ["🐡", "Pufferfish"],
+  ["🐠", "Tropical Fish"],
+  ["🐟", "Fish"],
   ["🐬", "Dolphin"],
+  ["🐳", "Whale"],
+  ["🦈", "Shark"],
+  ["🐊", "Crocodile"],
+  ["🐆", "Leopard"],
+  ["🦓", "Zebra"],
+  ["🐘", "Elephant"],
+  ["🦛", "Hippo"],
+  ["🦏", "Rhino"],
+  ["🐪", "Camel"],
+  ["🦒", "Giraffe"],
+  ["🦘", "Kangaroo"],
+  ["🐃", "Buffalo"],
+  ["🐑", "Sheep"],
+  ["🦙", "Llama"],
+  ["🐐", "Goat"],
+  ["🦌", "Deer"],
+  ["🦃", "Turkey"],
+  ["🦚", "Peacock"],
   ["🦜", "Parrot"],
-  ["🍇", "Grapes"],
-  ["🥦", "Broccoli"],
-  ["🐠", "Fish"],
+  ["🦢", "Swan"],
+  ["🦩", "Flamingo"],
+  ["🐿️", "Squirrel"],
+  ["🦔", "Hedgehog"],
+  ["🦦", "Otter"],
+  ["🦥", "Sloth"],
+  ["🐲", "Dragon"],
 ];
 
 // Bright, cheerful background gradients, each paired with a matching accent color.
@@ -82,64 +93,78 @@ const BACKGROUNDS = [
 
 const CONFETTI_POOL = ["🎉", "🌟", "✨", "🎈", "🍀", "🦋", "🌈", "💖"];
 
-// Critters that wander across the screen on their own, walking, running and flying.
-const AMBIENT_CRITTERS = [
-  "🐶", "🐱", "🐰", "🦁", "🐯", "🐻", "🐼", "🐘", "🦒", "🦓",
-  "🐺", "🦊", "🐵", "🦘", "🐧", "🐥", "🦋", "🐢", "🐔", "🦆",
-  "🐬", "🐠", "🦜", "🐝", "🐄", "🐷", "🐑", "🐴",
-];
-
 // Real recorded animal sounds (see sounds/CREDITS.md for licenses).
 const SOUND_FILES = {
   "🦁": "sounds/lion-roar.mp3",
   "🐯": "sounds/lion-roar.mp3",
   "🐆": "sounds/lion-roar.mp3",
+  "🦖": "sounds/lion-roar.mp3",
+  "🦕": "sounds/lion-roar.mp3",
+  "🐲": "sounds/lion-roar.mp3",
   "🐶": "sounds/dog-bark.mp3",
   "🐱": "sounds/cat-meow.mp3",
   "🐘": "sounds/elephant-trumpet.mp3",
   "🦉": "sounds/bird-chirp.mp3",
   "🦜": "sounds/bird-chirp.mp3",
-  "🐥": "sounds/bird-chirp.mp3",
+  "🐤": "sounds/bird-chirp.mp3",
+  "🐦": "sounds/bird-chirp.mp3",
+  "🦅": "sounds/bird-chirp.mp3",
   "🐔": "sounds/chicken-cluck.mp3",
+  "🐓": "sounds/chicken-cluck.mp3",
   "🦓": "sounds/horse-trot.mp3",
   "🦄": "sounds/horse-trot.mp3",
   "🐴": "sounds/horse-trot.mp3",
-  "🐄": "sounds/cow-moo.mp3",
+  "🐮": "sounds/cow-moo.mp3",
+  "🐃": "sounds/cow-moo.mp3",
   "🐷": "sounds/pig-oink.mp3",
+  "🦛": "sounds/pig-oink.mp3",
   "🐑": "sounds/sheep-baa.mp3",
+  "🐐": "sounds/sheep-baa.mp3",
+  "🦙": "sounds/sheep-baa.mp3",
 };
 
-// What each animal says when it shows up, spoken aloud for extra fun.
+// What each animal says when it shows up, spoken aloud for extra fun
+// (used as a fallback for creatures without a real recording above).
 const ANIMAL_SOUNDS = {
-  "🦁": "Roaaar!",
-  "🐯": "Grrrowl, roar!",
-  "🐶": "Woof woof!",
-  "🐱": "Meow!",
-  "🐘": "Pawoo!",
-  "🐝": "Buzz buzz!",
-  "🦊": "Ring-ding-ding!",
-  "🦔": "Squeak!",
-  "🐆": "Growl!",
-  "🦘": "Boing boing!",
-  "🐵": "Ooh ooh ah ah!",
-  "🐒": "Ooh ooh ah ah!",
-  "🦉": "Hoot hoot!",
-  "🐼": "Munch munch!",
+  "🐭": "Squeak!",
+  "🐹": "Squeak!",
   "🐰": "Hop hop!",
-  "🐍": "Hiss!",
-  "🦄": "Neigh!",
-  "🐺": "Awooo!",
-  "🐥": "Tweet tweet!",
-  "🦓": "Neigh!",
+  "🦊": "Ring-ding-ding!",
   "🐻": "Grrrowl!",
+  "🐼": "Munch munch!",
+  "🐨": "Munch munch!",
+  "🐸": "Ribbit!",
+  "🐵": "Ooh ooh ah ah!",
+  "🦍": "Ooh ooh ah ah!",
   "🐧": "Honk honk!",
-  "🐔": "Cluck cluck!",
   "🦆": "Quack quack!",
+  "🦇": "Eee eee!",
+  "🐺": "Awooo!",
+  "🐝": "Buzz buzz!",
+  "🦗": "Chirp chirp!",
+  "🐍": "Hiss!",
+  "🦎": "Hiss!",
+  "🐙": "Blub blub!",
+  "🦑": "Blub blub!",
+  "🦞": "Click click!",
+  "🦀": "Click click!",
+  "🐡": "Puff!",
+  "🐠": "Blub blub!",
+  "🐟": "Blub blub!",
   "🐬": "Eee eee!",
-  "🦜": "Tweet tweet, hello!",
-  "🐄": "Moo!",
-  "🐷": "Oink oink!",
-  "🐑": "Baa baa!",
+  "🐳": "Whoosh!",
+  "🦈": "Chomp chomp!",
+  "🐊": "Snap snap!",
+  "🦏": "Snort!",
+  "🐪": "Grunt!",
+  "🦘": "Boing boing!",
+  "🦌": "Boing boing!",
+  "🦃": "Gobble gobble!",
+  "🦚": "Screech!",
+  "🦢": "Honk honk!",
+  "🦔": "Squeak!",
+  "🦦": "Eee eee!",
+  "🐿️": "Chirr chirr!",
 };
 
 const welcome = document.getElementById("welcome");
@@ -147,6 +172,17 @@ const emojiEl = document.getElementById("emoji");
 const wordEl = document.getElementById("word");
 const confettiLayer = document.getElementById("confetti-layer");
 const critterLayer = document.getElementById("critter-layer");
+
+let lastCreature = null;
+
+function pickCreature() {
+  let creature;
+  do {
+    creature = CREATURES[Math.floor(Math.random() * CREATURES.length)];
+  } while (creature === lastCreature && CREATURES.length > 1);
+  lastCreature = creature;
+  return creature;
+}
 
 let audioCtx = null;
 
@@ -260,7 +296,7 @@ function spawnCritter(emoji) {
 }
 
 function spawnAmbientCritter() {
-  const emoji = AMBIENT_CRITTERS[Math.floor(Math.random() * AMBIENT_CRITTERS.length)];
+  const [emoji] = CREATURES[Math.floor(Math.random() * CREATURES.length)];
   spawnCritter(emoji);
   const nextDelay = 2500 + Math.random() * 4000;
   setTimeout(spawnAmbientCritter, nextDelay);
@@ -296,17 +332,15 @@ document.addEventListener("keydown", (event) => {
     return;
   }
 
-  const key = event.key.toLowerCase();
-  const entry = KEY_MAP[key] || SURPRISE_POOL[Math.floor(Math.random() * SURPRISE_POOL.length)];
-
   event.preventDefault();
-  handleInteraction(entry[0], entry[1]);
+  const [emoji, word] = pickCreature();
+  handleInteraction(emoji, word);
 });
 
 // Bonus: tapping/clicking the screen also triggers a fun surprise (great for tablets).
 document.addEventListener("pointerdown", () => {
-  const entry = SURPRISE_POOL[Math.floor(Math.random() * SURPRISE_POOL.length)];
-  handleInteraction(entry[0], entry[1]);
+  const [emoji, word] = pickCreature();
+  handleInteraction(emoji, word);
 });
 
 // Keep the screen lively with animals wandering by on their own.
