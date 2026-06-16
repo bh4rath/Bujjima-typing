@@ -1,80 +1,62 @@
-// A huge pool of animals, birds and fish — every keypress picks a random one
-// for maximum variety and surprise!
+// Per-letter cycling pools — each keypress steps to the next animal for that letter.
+const KEY_MAP = {
+  a: [["🐜","Ant"],["🐊","Alligator"],["🦙","Alpaca"],["🍎","Apple"],["🥑","Avocado"]],
+  b: [["🐻","Bear"],["🐝","Bee"],["🦇","Bat"],["🦋","Butterfly"],["🐦","Bird"],["🐃","Buffalo"],["🐗","Boar"]],
+  c: [["🐱","Cat"],["🐪","Camel"],["🦀","Crab"],["🐊","Crocodile"],["🐮","Cow"],["🦗","Cricket"],["🐤","Chick"],["🐔","Chicken"]],
+  d: [["🐶","Dog"],["🦆","Duck"],["🦌","Deer"],["🐬","Dolphin"],["🐲","Dragon"],["🦖","Dinosaur"]],
+  e: [["🐘","Elephant"],["🦅","Eagle"],["🫎","Elk"]],
+  f: [["🦊","Fox"],["🐟","Fish"],["🦩","Flamingo"],["🐸","Frog"]],
+  g: [["🦒","Giraffe"],["🦍","Gorilla"],["🐐","Goat"],["🦎","Gecko"]],
+  h: [["🐴","Horse"],["🐹","Hamster"],["🦛","Hippo"],["🦔","Hedgehog"],["🦅","Hawk"]],
+  i: [["🦎","Iguana"],["🐛","Inchworm"]],
+  j: [["🐆","Jaguar"],["🪼","Jellyfish"],["🐦","Jay"],["🐰","Jackrabbit"]],
+  k: [["🦘","Kangaroo"],["🐨","Koala"],["🐟","Koi Fish"]],
+  l: [["🦁","Lion"],["🐞","Ladybug"],["🦎","Lizard"],["🦙","Llama"],["🦞","Lobster"]],
+  m: [["🐵","Monkey"],["🐭","Mouse"],["🫎","Moose"],["🦋","Moth"]],
+  n: [["🐦","Nightingale"],["🦎","Newt"],["🐳","Narwhal"]],
+  o: [["🐙","Octopus"],["🦦","Otter"],["🦉","Owl"],["🐂","Ox"],["🐦","Oriole"]],
+  p: [["🐼","Panda"],["🐷","Pig"],["🐧","Penguin"],["🦜","Parrot"],["🦚","Peacock"],["🐡","Pufferfish"]],
+  q: [["🐦","Quail"],["🦘","Quokka"]],
+  r: [["🐰","Rabbit"],["🦏","Rhino"],["🐓","Rooster"],["🐀","Rat"],["🐦","Robin"]],
+  s: [["🐍","Snake"],["🐑","Sheep"],["🦈","Shark"],["🐌","Snail"],["🐿️","Squirrel"],["🦢","Swan"],["🦐","Shrimp"],["🦥","Sloth"]],
+  t: [["🐯","Tiger"],["🐢","Turtle"],["🦃","Turkey"],["🐠","Tropical Fish"]],
+  u: [["🦄","Unicorn"],["🐵","Uakari"]],
+  v: [["🦅","Vulture"],["🐍","Viper"],["🦎","Varan"]],
+  w: [["🐺","Wolf"],["🐳","Whale"],["🦦","Walrus"],["🪱","Worm"],["🍉","Watermelon"]],
+  x: [["🐿️","Xerus"],["🐟","X-Ray Fish"]],
+  y: [["🐂","Yak"],["🍠","Yam"],["🐤","Yellow Chick"]],
+  z: [["🦓","Zebra"],["🐠","Zebrafish"]],
+};
+
+// Current position in each letter's list (advances by 1 every press).
+const letterIndex = {};
+
+function pickForKey(key) {
+  const pool = KEY_MAP[key];
+  if (!pool) return null;
+  const idx = (letterIndex[key] || 0) % pool.length;
+  letterIndex[key] = idx + 1;
+  return pool[idx];
+}
+
+// Large creature pool used for non-letter keys (numbers, space, arrows, etc.)
+// and for the background wandering animals.
 const CREATURES = [
-  ["🦁", "Lion"],
-  ["🐯", "Tiger"],
-  ["🐶", "Dog"],
-  ["🐱", "Cat"],
-  ["🐭", "Mouse"],
-  ["🐹", "Hamster"],
-  ["🐰", "Rabbit"],
-  ["🦊", "Fox"],
-  ["🐻", "Bear"],
-  ["🐼", "Panda"],
-  ["🐨", "Koala"],
-  ["🐮", "Cow"],
-  ["🐷", "Pig"],
-  ["🐸", "Frog"],
-  ["🐵", "Monkey"],
-  ["🦍", "Gorilla"],
-  ["🐔", "Chicken"],
-  ["🐓", "Rooster"],
-  ["🐧", "Penguin"],
-  ["🐦", "Bird"],
-  ["🐤", "Chick"],
-  ["🦆", "Duck"],
-  ["🦅", "Eagle"],
-  ["🦉", "Owl"],
-  ["🦇", "Bat"],
-  ["🐺", "Wolf"],
-  ["🐴", "Horse"],
-  ["🦄", "Unicorn"],
-  ["🐝", "Bee"],
-  ["🦋", "Butterfly"],
-  ["🐌", "Snail"],
-  ["🐞", "Ladybug"],
-  ["🐜", "Ant"],
-  ["🦗", "Cricket"],
-  ["🐢", "Turtle"],
-  ["🐍", "Snake"],
-  ["🦎", "Lizard"],
-  ["🦖", "Dinosaur"],
-  ["🦕", "Dinosaur"],
-  ["🐙", "Octopus"],
-  ["🦑", "Squid"],
-  ["🦐", "Shrimp"],
-  ["🦞", "Lobster"],
-  ["🦀", "Crab"],
-  ["🐡", "Pufferfish"],
-  ["🐠", "Tropical Fish"],
-  ["🐟", "Fish"],
-  ["🐬", "Dolphin"],
-  ["🐳", "Whale"],
-  ["🦈", "Shark"],
-  ["🐊", "Crocodile"],
-  ["🐆", "Leopard"],
-  ["🦓", "Zebra"],
-  ["🐘", "Elephant"],
-  ["🦛", "Hippo"],
-  ["🦏", "Rhino"],
-  ["🐪", "Camel"],
-  ["🦒", "Giraffe"],
-  ["🦘", "Kangaroo"],
-  ["🐃", "Buffalo"],
-  ["🐑", "Sheep"],
-  ["🦙", "Llama"],
-  ["🐐", "Goat"],
-  ["🦌", "Deer"],
-  ["🦃", "Turkey"],
-  ["🦚", "Peacock"],
-  ["🦜", "Parrot"],
-  ["🦢", "Swan"],
-  ["🦩", "Flamingo"],
-  ["🐿️", "Squirrel"],
-  ["🦔", "Hedgehog"],
-  ["🦦", "Otter"],
-  ["🦥", "Sloth"],
-  ["🐲", "Dragon"],
+  ["🦁","Lion"],["🐯","Tiger"],["🐶","Dog"],["🐱","Cat"],["🐭","Mouse"],
+  ["🐹","Hamster"],["🐰","Rabbit"],["🦊","Fox"],["🐻","Bear"],["🐼","Panda"],
+  ["🐨","Koala"],["🐮","Cow"],["🐷","Pig"],["🐸","Frog"],["🐵","Monkey"],
+  ["🦍","Gorilla"],["🐔","Chicken"],["🐓","Rooster"],["🐧","Penguin"],["🐦","Bird"],
+  ["🐤","Chick"],["🦆","Duck"],["🦅","Eagle"],["🦉","Owl"],["🦇","Bat"],
+  ["🐺","Wolf"],["🐴","Horse"],["🦄","Unicorn"],["🐝","Bee"],["🦋","Butterfly"],
+  ["🐌","Snail"],["🐞","Ladybug"],["🐜","Ant"],["🐢","Turtle"],["🐍","Snake"],
+  ["🦎","Lizard"],["🦖","Dinosaur"],["🦕","Dinosaur"],["🐙","Octopus"],["🦑","Squid"],
+  ["🦀","Crab"],["🐡","Pufferfish"],["🐠","Tropical Fish"],["🐟","Fish"],
+  ["🐬","Dolphin"],["🐳","Whale"],["🦈","Shark"],["🐊","Crocodile"],
+  ["🦓","Zebra"],["🐘","Elephant"],["🦛","Hippo"],["🦏","Rhino"],["🐪","Camel"],
+  ["🦒","Giraffe"],["🦘","Kangaroo"],["🐑","Sheep"],["🦙","Llama"],["🐐","Goat"],
+  ["🦌","Deer"],["🦃","Turkey"],["🦚","Peacock"],["🦜","Parrot"],["🦢","Swan"],
+  ["🦩","Flamingo"],["🐿️","Squirrel"],["🦔","Hedgehog"],["🦦","Otter"],
+  ["🦥","Sloth"],["🐲","Dragon"],
 ];
 
 // Bright, cheerful background gradients, each paired with a matching accent color.
@@ -91,80 +73,96 @@ const BACKGROUNDS = [
   { bg: "linear-gradient(135deg, #f6d365, #fda085)", accent: "#f4623a" },
 ];
 
-const CONFETTI_POOL = ["🎉", "🌟", "✨", "🎈", "🍀", "🦋", "🌈", "💖"];
+const CONFETTI_POOL = ["🎉","🌟","✨","🎈","🍀","🦋","🌈","💖"];
 
 // Real recorded animal sounds (see sounds/CREDITS.md for licenses).
 const SOUND_FILES = {
-  "🦁": "sounds/lion-roar.mp3",
-  "🐯": "sounds/lion-roar.mp3",
-  "🐆": "sounds/lion-roar.mp3",
-  "🦖": "sounds/lion-roar.mp3",
-  "🦕": "sounds/lion-roar.mp3",
-  "🐲": "sounds/lion-roar.mp3",
-  "🐶": "sounds/dog-bark.mp3",
-  "🐱": "sounds/cat-meow.mp3",
-  "🐘": "sounds/elephant-trumpet.mp3",
-  "🦉": "sounds/bird-chirp.mp3",
-  "🦜": "sounds/bird-chirp.mp3",
-  "🐤": "sounds/bird-chirp.mp3",
-  "🐦": "sounds/bird-chirp.mp3",
-  "🦅": "sounds/bird-chirp.mp3",
-  "🐔": "sounds/chicken-cluck.mp3",
-  "🐓": "sounds/chicken-cluck.mp3",
-  "🦓": "sounds/horse-trot.mp3",
-  "🦄": "sounds/horse-trot.mp3",
-  "🐴": "sounds/horse-trot.mp3",
-  "🐮": "sounds/cow-moo.mp3",
-  "🐃": "sounds/cow-moo.mp3",
-  "🐷": "sounds/pig-oink.mp3",
-  "🦛": "sounds/pig-oink.mp3",
-  "🐑": "sounds/sheep-baa.mp3",
-  "🐐": "sounds/sheep-baa.mp3",
-  "🦙": "sounds/sheep-baa.mp3",
+  "🦁":"sounds/lion-roar.mp3",
+  "🐯":"sounds/lion-roar.mp3",
+  "🐆":"sounds/lion-roar.mp3",
+  "🦖":"sounds/lion-roar.mp3",
+  "🦕":"sounds/lion-roar.mp3",
+  "🐲":"sounds/lion-roar.mp3",
+  "🐶":"sounds/dog-bark.mp3",
+  "🐱":"sounds/cat-meow.mp3",
+  "🐘":"sounds/elephant-trumpet.mp3",
+  "🦉":"sounds/bird-chirp.mp3",
+  "🦜":"sounds/bird-chirp.mp3",
+  "🐤":"sounds/bird-chirp.mp3",
+  "🐦":"sounds/bird-chirp.mp3",
+  "🦅":"sounds/bird-chirp.mp3",
+  "🐔":"sounds/chicken-cluck.mp3",
+  "🐓":"sounds/chicken-cluck.mp3",
+  "🦃":"sounds/chicken-cluck.mp3",
+  "🦓":"sounds/horse-trot.mp3",
+  "🦄":"sounds/horse-trot.mp3",
+  "🐴":"sounds/horse-trot.mp3",
+  "🐮":"sounds/cow-moo.mp3",
+  "🐄":"sounds/cow-moo.mp3",
+  "🐃":"sounds/cow-moo.mp3",
+  "🐂":"sounds/cow-moo.mp3",
+  "🐷":"sounds/pig-oink.mp3",
+  "🐗":"sounds/pig-oink.mp3",
+  "🦛":"sounds/pig-oink.mp3",
+  "🐑":"sounds/sheep-baa.mp3",
+  "🐐":"sounds/sheep-baa.mp3",
+  "🦙":"sounds/sheep-baa.mp3",
 };
 
-// What each animal says when it shows up, spoken aloud for extra fun
-// (used as a fallback for creatures without a real recording above).
+// Speech fallback for creatures without a real recording.
 const ANIMAL_SOUNDS = {
-  "🐭": "Squeak!",
-  "🐹": "Squeak!",
-  "🐰": "Hop hop!",
-  "🦊": "Ring-ding-ding!",
-  "🐻": "Grrrowl!",
-  "🐼": "Munch munch!",
-  "🐨": "Munch munch!",
-  "🐸": "Ribbit!",
-  "🐵": "Ooh ooh ah ah!",
-  "🦍": "Ooh ooh ah ah!",
-  "🐧": "Honk honk!",
-  "🦆": "Quack quack!",
-  "🦇": "Eee eee!",
-  "🐺": "Awooo!",
-  "🐝": "Buzz buzz!",
-  "🦗": "Chirp chirp!",
-  "🐍": "Hiss!",
-  "🦎": "Hiss!",
-  "🐙": "Blub blub!",
-  "🦑": "Blub blub!",
-  "🦞": "Click click!",
-  "🦀": "Click click!",
-  "🐡": "Puff!",
-  "🐠": "Blub blub!",
-  "🐟": "Blub blub!",
-  "🐬": "Eee eee!",
-  "🐳": "Whoosh!",
-  "🦈": "Chomp chomp!",
-  "🐊": "Snap snap!",
-  "🦏": "Snort!",
-  "🐪": "Grunt!",
-  "🦘": "Boing boing!",
-  "🦌": "Boing boing!",
-  "🦃": "Gobble gobble!",
-  "🦚": "Screech!",
-  "🦢": "Honk honk!",
-  "🦔": "Squeak!",
-  "🦦": "Eee eee!",
-  "🐿️": "Chirr chirr!",
+  "🐜":"Crawl crawl!",
+  "🐛":"Munch munch!",
+  "🐌":"Slurp!",
+  "🐞":"Fly fly!",
+  "🐝":"Buzz buzz!",
+  "🦗":"Chirp chirp!",
+  "🐵":"Ooh ooh ah ah!",
+  "🦍":"Ooh ooh ah ah!",
+  "🐻":"Grrrowl!",
+  "🐼":"Munch munch!",
+  "🐨":"Munch munch!",
+  "🐰":"Hop hop!",
+  "🦊":"Ring-ding-ding!",
+  "🐭":"Squeak!",
+  "🐹":"Squeak squeak!",
+  "🐀":"Squeak!",
+  "🐸":"Ribbit!",
+  "🐺":"Awooo!",
+  "🦔":"Squeak!",
+  "🦦":"Eee eee!",
+  "🦇":"Eee eee!",
+  "🦅":"Screech!",
+  "🦩":"Honk!",
+  "🦢":"Honk honk!",
+  "🦚":"Screech!",
+  "🐧":"Honk honk!",
+  "🦆":"Quack quack!",
+  "🐊":"Snap snap!",
+  "🦎":"Hiss!",
+  "🐍":"Hiss!",
+  "🦏":"Snort!",
+  "🐗":"Snort!",
+  "🐪":"Grunt!",
+  "🦒":"Munch munch!",
+  "🦘":"Boing boing!",
+  "🫎":"Grunt!",
+  "🦌":"Hmm!",
+  "🐿️":"Chirr chirr!",
+  "🦥":"Zzzzz!",
+  "🐙":"Blub blub!",
+  "🦑":"Blub blub!",
+  "🦐":"Snap!",
+  "🦞":"Click click!",
+  "🦀":"Click click!",
+  "🐡":"Puff!",
+  "🐠":"Blub blub!",
+  "🐟":"Blub blub!",
+  "🐬":"Eee eee!",
+  "🐳":"Whoooosh!",
+  "🦈":"Chomp chomp!",
+  "🪼":"Wibble wobble!",
+  "🪱":"Wiggle wiggle!",
 };
 
 const welcome = document.getElementById("welcome");
@@ -172,17 +170,6 @@ const emojiEl = document.getElementById("emoji");
 const wordEl = document.getElementById("word");
 const confettiLayer = document.getElementById("confetti-layer");
 const critterLayer = document.getElementById("critter-layer");
-
-let lastCreature = null;
-
-function pickCreature() {
-  let creature;
-  do {
-    creature = CREATURES[Math.floor(Math.random() * CREATURES.length)];
-  } while (creature === lastCreature && CREATURES.length > 1);
-  lastCreature = creature;
-  return creature;
-}
 
 let audioCtx = null;
 
@@ -200,18 +187,14 @@ function playPopSound() {
   const ctx = getAudioContext();
   const oscillator = ctx.createOscillator();
   const gain = ctx.createGain();
-
   const startFreq = 400 + Math.random() * 400;
   oscillator.type = "sine";
   oscillator.frequency.setValueAtTime(startFreq, ctx.currentTime);
   oscillator.frequency.exponentialRampToValueAtTime(startFreq * 2, ctx.currentTime + 0.15);
-
   gain.gain.setValueAtTime(0.2, ctx.currentTime);
   gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
-
   oscillator.connect(gain);
   gain.connect(ctx.destination);
-
   oscillator.start();
   oscillator.stop(ctx.currentTime + 0.2);
 }
@@ -220,15 +203,10 @@ let currentAnimalAudio = null;
 
 function speakAnimalSound(emoji) {
   const sound = ANIMAL_SOUNDS[emoji];
-  if (!sound || !("speechSynthesis" in window)) {
-    return;
-  }
-
+  if (!sound || !("speechSynthesis" in window)) return;
   const utterance = new SpeechSynthesisUtterance(sound);
   utterance.rate = 0.9;
   utterance.pitch = 1.3;
-
-  // Stop any sound still playing so rapid keypresses don't queue up.
   speechSynthesis.cancel();
   speechSynthesis.speak(utterance);
 }
@@ -239,11 +217,7 @@ function playAnimalSound(emoji) {
     speakAnimalSound(emoji);
     return;
   }
-
-  // Stop any sound still playing so rapid keypresses don't overlap badly.
-  if (currentAnimalAudio) {
-    currentAnimalAudio.pause();
-  }
+  if (currentAnimalAudio) currentAnimalAudio.pause();
   currentAnimalAudio = new Audio(file);
   currentAnimalAudio.play().catch(() => {});
 }
@@ -271,7 +245,7 @@ function spawnCritter(emoji) {
   const goingRight = Math.random() < 0.5;
   const isRunning = Math.random() < 0.4;
   const duration = isRunning ? 1.5 + Math.random() * 1.5 : 3.5 + Math.random() * 3;
-  const size = 8 + Math.random() * 6; // vmin
+  const size = 8 + Math.random() * 6;
 
   const critter = document.createElement("div");
   critter.className = "critter";
@@ -298,17 +272,14 @@ function spawnCritter(emoji) {
 function spawnAmbientCritter() {
   const [emoji] = CREATURES[Math.floor(Math.random() * CREATURES.length)];
   spawnCritter(emoji);
-  const nextDelay = 2500 + Math.random() * 4000;
-  setTimeout(spawnAmbientCritter, nextDelay);
+  setTimeout(spawnAmbientCritter, 2500 + Math.random() * 4000);
 }
 
 function showItem(emoji, word) {
   emojiEl.textContent = emoji;
   wordEl.textContent = word;
-
   emojiEl.classList.remove("pop");
   wordEl.classList.remove("pop");
-  // Re-trigger the animation by forcing a reflow before re-adding the class.
   void emojiEl.offsetWidth;
   emojiEl.classList.add("pop");
   wordEl.classList.add("pop");
@@ -327,19 +298,18 @@ function handleInteraction(emoji, word) {
 }
 
 document.addEventListener("keydown", (event) => {
-  // Let browser/OS shortcuts (Ctrl, Alt, Meta combos) work as normal.
-  if (event.ctrlKey || event.metaKey || event.altKey) {
-    return;
-  }
-
+  if (event.ctrlKey || event.metaKey || event.altKey) return;
   event.preventDefault();
-  const [emoji, word] = pickCreature();
-  handleInteraction(emoji, word);
+
+  const key = event.key.toLowerCase();
+  const entry = pickForKey(key)
+    || CREATURES[Math.floor(Math.random() * CREATURES.length)];
+  handleInteraction(entry[0], entry[1]);
 });
 
-// Bonus: tapping/clicking the screen also triggers a fun surprise (great for tablets).
+// Tapping the screen picks a random creature (great for tablets).
 document.addEventListener("pointerdown", () => {
-  const [emoji, word] = pickCreature();
+  const [emoji, word] = CREATURES[Math.floor(Math.random() * CREATURES.length)];
   handleInteraction(emoji, word);
 });
 
